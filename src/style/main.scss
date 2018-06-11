@@ -1,0 +1,14 @@
+@import "../../node_modules/bootstrap/scss/bootstrap-reboot";
+
+body {
+    background-color: #333;
+}
+
+h1 {
+    color: #e1e1e1;
+}
+
+canvas {
+    margin: 0 auto;
+    //transition: all 0.3s;
+}

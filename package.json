@@ -1,0 +1,40 @@
+{
+  "name": "pw",
+  "version": "0.0.1",
+  "description": "html5 game parallel worlds",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Samovar34/pw.git"
+  },
+  "keywords": [
+    "html5",
+    "game"
+  ],
+  "author": "Samovar34",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Samovar34/pw/issues"
+  },
+  "homepage": "https://github.com/Samovar34/pw#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.4.0",
+    "gulp-clean-css": "^3.9.4",
+    "gulp-file-include": "^2.0.1",
+    "gulp-htmlmin": "^4.0.0",
+    "gulp-if-else": "^1.0.3",
+    "gulp-sass": "^4.0.1",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-uglify": "^3.0.0",
+    "node-static": "^0.7.10",
+    "zpath": "^0.5.2"
+  },
+  "dependencies": {
+    "bootstrap": "^4.1.1",
+    "phaser-ce": "^2.10.5"
+  }
+}
