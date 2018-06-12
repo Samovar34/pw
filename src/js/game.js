@@ -15,8 +15,8 @@ let game;
 
 window.onload = () => {
 	game = new Phaser.Game({
-		width: 720,
-		height: 1280,
+		width: 360,
+		height: 640,
 		renderer: Phaser.AUTO,
 		enableDebug: true,
 		antialias: false

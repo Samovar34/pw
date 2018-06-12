@@ -8,18 +8,19 @@ PW.playState.prototype = {
 		// level components
 		this.input = new PW.Input(this.game);
 
-		// для запоминания скорости playerA
-		this.tempVelocityAX = 0;
-		this.tempVelocityAY = 0;
+		// background
+		let bgA = this.game.add.sprite(0, 0, 'bgA');
+		bgA.smoothed = false;
+		bgA.scale.setTo(360, 288);
 
-		// для запоминания скорости playerB
-		this.tempVelocityBX = 0;
-		this.tempVelocityBX = 0;
+		let bgB = this.game.add.sprite(0, 288, 'bgB');
+		bgB.smoothed = false;
+		bgB.scale.setTo(360, 288);
 
 		let bg = this.game.add.sprite(0, 0, "level1");
 
 		this.playerA = new PW.Player(this.game, this.input, 64, 64, 'A');
-		this.playerB = new PW.Player(this.game, this.input, 64, 576, 'B');
+		this.playerB = new PW.Player(this.game, this.input, 64, 332, 'B');
 
 		// stop movement for playerB
 		this.playerB.canInput = false;
@@ -29,12 +30,9 @@ PW.playState.prototype = {
 
 
 		// Active screen is 1
-		this.tint = this.game.add.sprite(0, 512, 'tint');
+		this.tint = this.game.add.sprite(0, 288, 'tint');
 		this.tint.alpha = 0.8;
-		this.tint.scale.setTo(720, 512);
-
-		// w1.loopFull(1);
-		// w2.loopFull(0);
+		this.tint.scale.setTo(360, 288);
 
 		// map
 		this.map = this.game.add.tilemap('level1', 16, 16);
@@ -42,8 +40,8 @@ PW.playState.prototype = {
 		this.createCollision();
 
 		this.phantom = this.game.add.sprite(0, 0);
-		this.phantom.width = 32;
-		this.phantom.height = 32;
+		this.phantom.width = 24;
+		this.phantom.height = 24;
 
 		this.collision2d.add(this.phantom);
 
@@ -51,8 +49,23 @@ PW.playState.prototype = {
 
 		// create collision
 
+		// buttons
+		this.input.addLeftBtn(32, 542);
+		this.input.addRightBtn(32 + 128 + 64, 542);
+		//this.input.addJumpBtn(720 - 128 - 64, 1084);
 
-		this.game.input.onTap.add(this.changeActiveScreen, this);
+		this.fullScreenBtn = this.game.add.button(360-64, 0, 'startFullScreen', this.goToFullScreen, this);
+
+		this.jumpBtn = this.game.add.button(360-64-16, 574, 'jumpBtn', null, this);
+		this.jumpBtn.onInputDown.add(this.playerJump, this);
+
+		this.changeBtn = this.game.add.button(360-164, 574, 'changeScreen', null, this);
+		this.changeBtn.onInputDown.add(this.changeActiveScreen, this);
+	},
+
+	playerJump: function () {
+		this.playerA.jump();
+		this.playerB.jump();
 	},
 
 	update: function () {
@@ -64,14 +77,18 @@ PW.playState.prototype = {
 	},
 
 	render: function () {
-		this.game.debug.text('play', 12, 12, '#0f0');
+		// this.game.debug.text('play', 12, 12, '#0f0');
+		// this.game.debug.text('pointer1: ' + this.game.input.pointer1.isDown, 12, 36, '#0f0');
+		// this.game.debug.text('pointer2: ' + this.game.input.pointer2.isDown, 12, 56, '#0f0');
 		//this.game.debug.physicsGroup(this.collision2d);
+		// this.game.debug.pointer(game.input.mousePointer);
+		// this.game.debug.pointer(this.game.input.pointer1);
+		// this.game.debug.pointer(this.game.input.pointer2);
 	},
 	
 	goToFullScreen: function () {
 		game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
 		if (this.game.scale.isFullScreen) {
-			
 			this.game.scale.stopFullScreen();
 		} else {
 			this.game.scale.startFullScreen();
@@ -81,23 +98,20 @@ PW.playState.prototype = {
 	changeActiveScreen: function () {
 		if (this.tint.y == 0) {
 			// active top screen
-			this.tint.y = 512;
+			this.tint.y = 288;
 			w1.volume = 1;
 			w2.volume = 0;
 
 			// activate playerA
 			this.playerA.canInput = true;
-			// this.playerA.body.velocity.x = this.tempVelocityAX;
-			// this.playerA.body.velocity.y = this.tempVelocityAY;
 			this.playerA.body.gravity.y = 1000;
 
-			this.phantom.x = this.playerB.x - 16;
-			this.phantom.y = this.playerB.y - 16 - 512;
+			// platform position
+			this.phantom.x = this.playerB.x - 12;
+			this.phantom.y = this.playerB.y - 12 - 288;
 
 			// activate playerB
 			this.playerB.canInput = false;
-			// this.tempVelocityBX = this.playerB.body.velocity.x;
-			// this.tempVelocityBY = this.playerB.body.velocity.y;
 			this.playerB.body.stop();
 			this.playerB.body.gravity.y = 0;
 		}else {
@@ -105,21 +119,17 @@ PW.playState.prototype = {
 			this.tint.y = 0;
 			w1.volume = 0;
 			w2.volume = 1;
-			console.log('top');
 
-			// activate input for playerA
+			// activate input for playerA and physic
 			this.playerB.canInput = true;
-			//this.playerB.body.velocity.x = this.tempVelocityBX;
-			//this.playerB.body.velocity.y = this.tempVelocityBY;
 			this.playerB.body.gravity.y = 1000;
 
-			this.phantom.x = this.playerA.x - 16;
-			this.phantom.y = this.playerA.y - 16 + 512;
+			// platform position
+			this.phantom.x = this.playerA.x - 12;
+			this.phantom.y = this.playerA.y - 12 + 288;
 
-			// stop and memorize velocity
+			// stop gravity and velocity
 			this.playerA.canInput = false;
-			//this.tempVelocityAX = this.playerA.body.velocity.x;
-			//this.tempVelocityAY = this.playerA.body.velocity.y;
 			this.playerA.body.stop();
 			this.playerA.body.gravity.y = 0;
 		}

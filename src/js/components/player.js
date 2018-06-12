@@ -9,11 +9,11 @@ PW.Player = function (game, input, x, y, name) {
 
 	this.options = {
 		gravity: 1000,
-		speed: 320,
+		speed: 292,
 		maxFallSpeed: 720,
 		runSpeedUpRate: 1.5,
 		acceleration: 4800,
-		jump: 480,
+		jump: 400,
 		drag: 5950,
 		inAirAccelerationRate: 0.45, // acceleration *= inAirAccelerationRate
 		inAirDrag: 0.1,
@@ -33,6 +33,7 @@ PW.Player = function (game, input, x, y, name) {
 	this.inTrigger = false; // внутри триггера или нет?
 
 	this.anchor.setTo(0.5);
+	this.scale.setTo(0.75);
 	this.smoothed = false;
 	
 	// physics
@@ -83,17 +84,19 @@ PW.Player.prototype.update = function () {
 	//this.currentState();
 	
 
-	//this.input.update();
+	this.input.update();
 
 	this.move();
 
 	if (this.canInput && this.input.jumpIsJustDown()) {
 	    this.jump();
 	}
+
+	this.input.reset();
 };
 
 PW.Player.prototype.jump = function () {
-	if (this._onFloor()) {
+	if (this._onFloor() && this.canInput) {
 		this.body.velocity.y = this.options.jump * -1;
 	}
 };
